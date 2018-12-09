@@ -106,7 +106,7 @@ pipeline {
 
     // 7
     stage('cleanup') {
-      steps {}
+      steps {sh ':'}
     }
   }
 }
