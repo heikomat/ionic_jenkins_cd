@@ -1,0 +1,7 @@
+{
+  "name": "ionic-jenkins-cd",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
