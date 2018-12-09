@@ -174,4 +174,12 @@ pipeline {
       steps {sh ':'}
     }
   }
+
+  post {
+    always {
+      script {
+        cleanup_workspace();
+      }
+    }
+  }
 }
