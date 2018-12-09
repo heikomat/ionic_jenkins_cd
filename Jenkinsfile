@@ -18,6 +18,7 @@ pipeline {
     nodejs 'node-lts'
   }
   environment {
+    NODE_JS_VERSION = 'node-lts' // so we use the same node version throughout the pipeline
     APPSTORECONNECT_TEAMID = '1310680'// only required if build for iOS
   }
 
