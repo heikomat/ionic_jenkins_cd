@@ -1,5 +1,26 @@
+def cleanup_workspace() {
+  cleanWs()
+  dir("${env.WORKSPACE}@tmp") {
+    deleteDir()
+  }
+  dir("${env.WORKSPACE}@script") {
+    deleteDir()
+  }
+  dir("${env.WORKSPACE}@script@tmp") {
+    deleteDir()
+  }
+}
+
 pipeline {
   agent any
+  // only required if you actually use node in the build process
+  tools {
+    nodejs 'node-lts'
+  }
+  environment {
+    APPSTORECONNECT_TEAMID = '1310680'// only required if build for iOS
+  }
+
   stages {
     // 1
     stage('prepare') {
