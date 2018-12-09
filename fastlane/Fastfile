@@ -2,7 +2,7 @@ lane :prepare_ios do
   # xcodeprojects created by ionic use some old format, so we need to update it.
   # You probably don't need this, if you don't use ionic
   upgrade_super_old_xcode_project(
-    path: "platforms/ios/5Minds Deploydemo.xcodeproj",
+    path: "platforms/ios/Deploydemo 5Minds.xcodeproj",
     team_id: ENV["APPLE_TEAM_ID"]
   )
 
@@ -10,14 +10,14 @@ lane :prepare_ios do
   # This is harder to set up, but this way we don't rely on some magic services
   # that we don't really understand and that could change without our knowledge
   disable_automatic_code_signing(
-    path: "platforms/ios/5Minds Deploydemo.xcodeproj",
+    path: "platforms/ios/Deploydemo 5Minds.xcodeproj",
     code_sign_identity: "iPhone Distribution",
     team_id: ENV["APPLE_TEAM_ID"]
   )
 
   # Tell xcode to use our specific provisioning profile (obtained from jenkins)
   update_project_provisioning({
-    xcodeproj: "platforms/ios/5Minds Deploydemo.xcodeproj",
+    xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
     profile: ENV["PROVISIONING_PROFILE_FILE"],
     build_configuration: "Release"
   })
@@ -26,14 +26,14 @@ lane :prepare_ios do
   # to set name and identifier based on environment variables:
   #update_info_plist(
   #  xcodeproj: "platforms/ios/5Minds Deploydemo.xcodeproj",
-  #  plist_path: "5Minds Deploydemo/5Minds Deploydemo-Info.plist",
+  #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
   #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
   #  display_name: ENV["IOS_APP_NAME"]
   #)
 
   # the combination version + build must be unique, so set them here
   increment_version_number(
-    xcodeproj: "platforms/ios/5Minds Deploydemo.xcodeproj",
+    xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
     version_number: ENV["APP_VERSION"]
   )
 
@@ -41,7 +41,7 @@ lane :prepare_ios do
   # increment_build_number isn't working (it always says "Apple Generic
   # Versioning is not enabled in this project"), see https://github.com/fastlane/fastlane/issues/9506
   set_info_plist_value(
-    path: "platforms/ios/5Minds Deploydemo/5Minds Deploydemo-Info.plist",
+    path: "platforms/ios/Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
     key: "CFBundleVersion",
     value: ENV["BUILD_NUMBER"]
   )
@@ -51,7 +51,7 @@ lane :prepare_ios do
   # Setting this value allows us to skip the manual export compliance step in
   # App Store Connect, which in turn allows us to directly push the build to testers.
   set_info_plist_value(
-    path: "platforms/ios/5Minds Deploydemo/5Minds Deploydemo-Info.plist",
+    path: "platforms/ios/Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
     key: "ITSAppUsesNonExemptEncryption",
     value: false
   )
@@ -60,7 +60,7 @@ lane :prepare_ios do
   # code, which you can find in App Store Connect.
   #
   #set_info_plist_value(
-  #  path: "platforms/ios/factro/factro-Info.plist",
+  #  path: "platforms/ios/Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
   #  key: "ITSEncryptionExportComplianceCode",
   #  value: "YOUR_COMPLIANCE_CODE_HERE"
   #)
@@ -88,4 +88,4 @@ lane :upload_ios do
   upload_to_testflight(
     username: ENV["APPSTORECONNECT_USER"]
   )
-end 
+end
