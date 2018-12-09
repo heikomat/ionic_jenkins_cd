@@ -94,7 +94,7 @@ pipeline {
           }
         }
 
-        stage("build base android app") {
+        stage("build base ios app") {
           agent {
             label "master"
           }
