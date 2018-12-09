@@ -37,7 +37,7 @@ pipeline {
 
           // Define when to build the app
           BRANCH_IS_MASTER = env.BRANCH_NAME == 'master';
-          BUILD_APP = BRANCH_IS_MASTER;
+          BUILD_APP = BRANCH_IS_MASTER || env.BRANCH_NAME == 'ios_build_test';
 
           // prepare dependencies to use when setting up the android/ios projects
           nodejs(nodeJSInstallationName: env.NODE_JS_VERSION) {
