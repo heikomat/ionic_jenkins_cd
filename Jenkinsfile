@@ -66,6 +66,9 @@ pipeline {
     }
 
     stage('prepare build') {
+      when {
+        expression {BUILD_APP}
+      }
       parallel {
         // 3
         stage("build base android app") {
