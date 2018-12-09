@@ -106,11 +106,6 @@ pipeline {
 
     // 7
     stage('cleanup') {
-      steps {
-        script {
-          sh(script: ':', returnStdout: true);
-        }
-      }
     }
   }
 }
