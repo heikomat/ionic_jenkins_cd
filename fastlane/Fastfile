@@ -75,7 +75,7 @@ lane :build_ios do
     export_options: {
       export_method: "app-store",
       provisioningProfiles: {
-        "de.5minds.deploydemo" => ENV["PROVISIONING_PROFILE_ID"]
+        "de.fiveminds.deploydemo" => ENV["PROVISIONING_PROFILE_ID"]
         # use the following if you build mutliple apps with this fastfile:
         #ENV["IOS_APP_IDENTIFIER"] => ENV["PROVISIONING_PROFILE_ID"]
       },
