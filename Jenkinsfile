@@ -69,11 +69,6 @@ pipeline {
               }
             }
           }
-          post {
-            always {
-              cleanup_workspace();
-            }
-          }
         }
 
         // 6
