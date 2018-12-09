@@ -25,7 +25,7 @@ lane :prepare_ios do
   # If you'd like to build multiple apps with identical settings, you could add this
   # to set name and identifier based on environment variables:
   #update_info_plist(
-  #  xcodeproj: "platforms/ios/5Minds Deploydemo.xcodeproj",
+  #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
   #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
   #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
   #  display_name: ENV["IOS_APP_NAME"]
@@ -69,7 +69,7 @@ end
 lane :build_ios do
   # Tell xcode to use the provisioning provile we provide to build the app
   build_app(
-    workspace: "platforms/ios/5Minds Deploydemo.xcworkspace",
+    workspace: "platforms/ios/Deploydemo 5Minds.xcworkspace",
     configuration: "Release",
     clean: true,
     export_options: {
