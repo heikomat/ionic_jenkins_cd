@@ -129,6 +129,9 @@ pipeline {
     }
 
     stage('build and deploy') {
+      when {
+        expression {BUILD_APP}
+      }
       parallel {
 
         // 5
