@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="de.5minds.deploydemo" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="de.fiveminds.deploydemo" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>5Minds Deploydemo</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="heiko.mathes@gmail.com">Heiko Mathes</author>
