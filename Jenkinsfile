@@ -72,11 +72,49 @@ pipeline {
       parallel {
         // 3
         stage("build base android app") {
-          steps {sh ':'}
+          agent {
+            label "master"
+          }
+
+          steps {
+            // we need the platform so that the ng run app:ionic-cordova command
+            // can produce platform sepcific cordova code in www, and correctly
+            // setup this code in the platform-folder
+            unstash('node_modules');
+            sh('npm run add_android');
+            sh('npm run prepare_android');
+
+            // these folders are all we need to later build the actual app
+            stash(includes: 'www/, platforms/', name: 'base_android_build');
+          }
+          post {
+            always {
+              cleanup_workspace();
+            }
+          }
         }
 
-        stage("build base ios app") {
-          steps {sh ':'}
+        stage("build base android app") {
+          agent {
+            label "master"
+          }
+
+          steps {
+            // we need the platform so that the ng run app:ionic-cordova command
+            // can produce platform sepcific cordova code in www, and correctly
+            // setup this code in the platform-folder
+            unstash('node_modules');
+            sh('npm run add_ios');
+            sh('npm run prepare_ios');
+
+            // these folders are all we need to later build the actual app
+            stash(includes: 'www/, platforms/', name: 'base_ios_build');
+          }
+          post {
+            always {
+              cleanup_workspace();
+            }
+          }
         }
 
         // 4
