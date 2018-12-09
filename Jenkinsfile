@@ -25,12 +25,42 @@ pipeline {
   stages {
     // 1
     stage('prepare') {
-      steps {sh ':'}
+      script {
+        // get the package version
+        PACKAGE_VERSION = sh(
+          script: 'node --print --eval "require(\'./package.json\').version"',
+          returnStdout: true
+        ).trim();
+
+        echo("Package version is '${PACKAGE_VERSION}'");
+
+        // Define when to build the app
+        BRANCH_IS_MASTER = env.BRANCH_NAME == 'master';
+        BUILD_APP = BRANCH_IS_MASTER ||  BRANCH_IS_CLOUD;
+
+        // prepare dependencies to use when setting up the android/ios projects
+        nodejs(nodeJSInstallationName: env.NODE_JS_VERSION) {
+          sh('npm install');
+        }
+
+        stash(includes: 'node_modules/', name: 'node_modules');
+      }
     }
 
     // 2
+    /**
+      * just run a dev build if we're not on master, so that every commit gets
+      * at least built once. we don't do a production build here, because
+      * dev-builds are fast, while production builds take a lot of ressources
+      */
     stage('test build') {
-      steps {sh ':'}
+      when {
+        expression {!BUILD_APP}
+      }
+      steps {
+        unstash('node_modules');
+        sh ('npm run build');
+      }
     }
 
     stage('prepare build') {
