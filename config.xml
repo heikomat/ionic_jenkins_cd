@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="de.fiveminds.deploydemo" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>5Minds Deploydemo</name>
+    <name>Deploydemo 5Minds</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="heiko.mathes@gmail.com">Heiko Mathes</author>
     <content src="index.html" />
