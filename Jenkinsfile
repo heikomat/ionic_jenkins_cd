@@ -169,7 +169,7 @@ pipeline {
         // 6
         stage('iOS app') {
           agent {
-            label "macos"
+            label "fastlane-ios"
           }
           stages {
             stage("setup keychain and profile") {
