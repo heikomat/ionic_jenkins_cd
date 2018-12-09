@@ -4,6 +4,8 @@
   "author": "Ionic Framework",
   "homepage": "http://ionicframework.com/",
   "scripts": {
+    "prepare_android": "ionic cordova prepare ios --prod --release",
+    "prepare_ios": "ionic cordova prepare ios --prod --release",
     "serve": "ionic serve --address localhost --port 4200 --lab",
     "add_android": "ionic cordova platform add android",
     "add_ios": "ionic cordova platform add ios",
