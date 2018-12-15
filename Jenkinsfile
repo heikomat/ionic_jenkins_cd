@@ -129,7 +129,7 @@ pipeline {
         stage('Android app') {
           stages {
             stage("setup build dependencies") {
-              steps {sh ':'}
+              steps {sh "docker run --volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace cangol/android-gradle gradle wrapper"}
             }
             stage("prepare project") {
               steps {sh ':'}
