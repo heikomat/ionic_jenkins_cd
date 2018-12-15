@@ -116,28 +116,6 @@ pipeline {
             }
           }
         }
-
-        // 4
-        stage("prepare android build env") {
-          steps {sh ':'}
-        }
-
-        stage("prepare ios build env") {
-          when {
-            expression {BUILD_APP}
-          }
-          agent {
-            label "fastlane-ios"
-          }
-          steps {
-            sh("bundle exec fastlane install_plugins");
-          }
-          post {
-            always {
-              cleanup_workspace();
-            }
-          }
-        }
       }
     }
 
@@ -147,9 +125,12 @@ pipeline {
       }
       parallel {
 
-        // 5
+        // 4
         stage('Android app') {
           stages {
+            stage("setup build dependencies") {
+              steps {sh ':'}
+            }
             stage("prepare project") {
               steps {sh ':'}
             }
@@ -162,10 +143,15 @@ pipeline {
           }
         }
 
-        // 6
+        // 5
         stage('iOS app') {
           agent {
             label "fastlane-ios"
+          }
+          stage("setup build dependencies") {
+            steps {
+              sh("bundle exec fastlane install_plugins");
+            }
           }
           stages {
             stage("setup keychain and profile") {
@@ -274,7 +260,7 @@ pipeline {
       }
     }
 
-    // 7
+    // 6
     stage('cleanup') {
       steps {sh ':'}
     }
