@@ -129,14 +129,14 @@ pipeline {
         stage('Android app') {
           agent {
             label "master"
-            docker {
-              image 'cangol/android-gradle'
-              args "--volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace"
-            }
           }
           stages {
             stage("setup build dependencies") {
-              steps {sh "gradle wrapper"}
+              steps {
+                docker.image('cangol/android-gradle').withRun("--volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace") { c ->
+                    sh 'gradle wrapper'
+                }
+              }
             }
             stage("prepare project") {
               steps {sh ':'}
