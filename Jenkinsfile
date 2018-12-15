@@ -145,115 +145,24 @@ pipeline {
 
         // 5
         stage('iOS app') {
-          agent {
-            label "fastlane-ios"
-          }
           stages {
             stage("setup build dependencies") {
-              steps {
-                sh("bundle exec fastlane install_plugins");
-              }
+              steps {sh ':'}
             }
             stage("setup keychain and profile") {
-              steps {
-                // cleanup distribution environment
-                // make sure the provisioning profile folder exists
-                sh("mkdir -p ~/Library/MobileDevice/Provisioning\\ Profiles");
-
-                // uninstall all provisioning profiles and previous build certificates
-                sh("rm -f ~/Library/MobileDevice/Provisioning\\ Profiles/*");
-                sh("security delete-keychain deploy_demo_build.keychain || :");
-
-                withCredentials([
-                  file(credentialsId: 'ios_provisioning_profile', variable: 'PROVISIONING_PROFILE_FILE'),
-                  file(credentialsId: 'ios_distribution_certificate_and_key', variable: 'DISTRIBUTION_CERTIFICATE_FILE'),
-                  string(credentialsId: 'ios_distribution_certificate_key_password', variable: 'DISTRIBUTION_CERTIFICATE_PASSWORD'),
-                ]) {
-                  script {
-                    // setup the singing certificate
-                    // see https://stackoverflow.com/a/19550453 on using a new keychain just for the build
-                    def TEMP_KEYCHAIN_PASSWORD = 'sandbox-gondola-majority';
-                    sh("security create-keychain -p ${TEMP_KEYCHAIN_PASSWORD} deploy_demo_build.keychain");
-                    sh("security list-keychains -s ~/Library/Keychains/deploy_demo_build.keychain");
-                    sh("security default-keychain -s ~/Library/Keychains/deploy_demo_build.keychain");
-
-                    // install the certificate and keep the keychain for this build unlocked
-                    sh("security import ${DISTRIBUTION_CERTIFICATE_FILE} -k deploy_demo_build.keychain -P ${DISTRIBUTION_CERTIFICATE_PASSWORD} -A");
-                    sh("security unlock-keychain -p \"${TEMP_KEYCHAIN_PASSWORD}\" deploy_demo_build.keychain");
-                    sh("security set-keychain-settings -t 3600 -l deploy_demo_build.keychain");
-
-                    // make it so that xcode can use the keychain non-interactively
-                    // see https://apple.stackexchange.com/a/285320
-                    def certificate_identity = sh(script: "security find-identity -v -p codesigning \"deploy_demo_build.keychain\" | head -1 | grep '\"' | sed -e 's/[^\"]*\"//' -e 's/\".*//'", returnStdout: true).trim(); // Programmatically derive the identity
-                    sh("security set-key-partition-list -S apple-tool:,apple: -s -k ${TEMP_KEYCHAIN_PASSWORD} -D \"${certificate_identity}\" -t private deploy_demo_build.keychain"); // Enable codesigning from a non user interactive shell
-
-                    // install the provisioning profile
-                    // see https://gist.github.com/benvium/2568707 for how to install provisioning profiles from command line
-                    PROVISIONING_PROFILE_ID = sh(script: "/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< \$(security cms -D -i ${PROVISIONING_PROFILE_FILE})_", returnStdout: true).trim();
-                    sh("cp \"${PROVISIONING_PROFILE_FILE}\" ~/Library/MobileDevice/Provisioning\\ Profiles/${PROVISIONING_PROFILE_ID}.mobileprovision");
-                  }
-                }
-              }
+              steps {sh ':'}
             }
             stage("prepare xcode project") {
-              steps {
-                unstash('base_ios_build');
-
-                withCredentials([
-                  file(credentialsId: 'ios_provisioning_profile', variable: 'PROVISIONING_PROFILE_FILE'),
-                ]) {
-                  script {
-                    def apple_team_id = sh(script: "/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' /dev/stdin <<< \$(security cms -D -i ${PROVISIONING_PROFILE_FILE})_", returnStdout: true).trim();
-
-                    sh("""\
-                      PROVISIONING_PROFILE_FILE="${PROVISIONING_PROFILE_FILE}" \
-                      APPLE_TEAM_ID=${apple_team_id} \
-                      APP_VERSION=${PACKAGE_VERSION} \
-                      BUILD_NUMBER=${BUILD_NUMBER} \
-                      bundle exec fastlane prepare_ios
-                    """);
-                  }
-                }
-              }
+              steps {sh ':'}
             }
             stage("build") {
-              steps {
-                script {
-                  sh("""\
-                    PROVISIONING_PROFILE_ID="${PROVISIONING_PROFILE_ID}" \
-                    bundle exec fastlane build_ios
-                  """);
-                }
-              }
+              steps {sh ':'}
             }
             stage("upload") {
-              steps {
-                withCredentials([
-                  usernamePassword(credentialsId: 'ios_distribution_appstore_user', usernameVariable: 'APPSTORE_USER', passwordVariable: 'APPSTORE_PASSWORD'),
-                ]) {
-
-                  script {
-                    sh("""\
-                      APPSTORECONNECT_USER=${APPSTORE_USER} \
-                      FASTLANE_PASSWORD="${APPSTORE_PASSWORD}" \
-                      FASTLANE_ITC_TEAM_ID=${APPSTORECONNECT_TEAMID} \
-                      bundle exec fastlane upload_ios
-                    """);
-                  }
-                }
-              }
+              steps {sh ':'}
             }
             stage("reset keychain") {
-              steps {
-                // revert to the regular default keychain
-                sh("security list-keychains -s ~/Library/Keychains/login.keychain");
-                sh("security default-keychain -s login.keychain");
-              }
-            }
-          }
-          post {
-            always {
-              cleanup_workspace();
+              steps {sh ':'}
             }
           }
         }
