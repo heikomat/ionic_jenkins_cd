@@ -133,8 +133,10 @@ pipeline {
           stages {
             stage("setup build dependencies") {
               steps {
-                docker.image('cangol/android-gradle').withRun("--volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace") { c ->
-                    sh 'gradle wrapper'
+                script {
+                    docker.image('cangol/android-gradle').withRun("--volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace") { c ->
+                      sh 'gradle wrapper'
+                    }
                 }
               }
             }
