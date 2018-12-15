@@ -148,12 +148,12 @@ pipeline {
           agent {
             label "fastlane-ios"
           }
-          stage("setup build dependencies") {
-            steps {
-              sh("bundle exec fastlane install_plugins");
-            }
-          }
           stages {
+            stage("setup build dependencies") {
+              steps {
+                sh("bundle exec fastlane install_plugins");
+              }
+            }
             stage("setup keychain and profile") {
               steps {
                 // cleanup distribution environment
