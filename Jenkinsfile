@@ -130,10 +130,6 @@ pipeline {
             label "fastlane-ios"
           }
           steps {
-            nodejs(nodeJSInstallationName: env.NODE_JS_VERSION) {
-              sh('npm install');
-            }
-            stash(includes: 'node_modules/', name: 'node_modules_ios');
             sh("bundle exec fastlane install_plugins");
           }
           post {
@@ -216,7 +212,6 @@ pipeline {
             stage("prepare xcode project") {
               steps {
                 unstash('base_ios_build');
-                unstash('node_modules_ios');
 
                 withCredentials([
                   file(credentialsId: 'ios_provisioning_profile', variable: 'PROVISIONING_PROFILE_FILE'),
