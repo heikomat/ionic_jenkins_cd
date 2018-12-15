@@ -116,32 +116,6 @@ pipeline {
             }
           }
         }
-
-        // 4
-        stage("prepare android build env") {
-          steps {sh ':'}
-        }
-
-        stage("prepare ios build env") {
-          when {
-            expression {BUILD_APP}
-          }
-          agent {
-            label "fastlane-ios"
-          }
-          steps {
-            nodejs(nodeJSInstallationName: env.NODE_JS_VERSION) {
-              sh('npm install');
-            }
-            stash(includes: 'node_modules/', name: 'node_modules_ios');
-            sh("bundle exec fastlane install_plugins");
-          }
-          post {
-            always {
-              cleanup_workspace();
-            }
-          }
-        }
       }
     }
 
@@ -151,9 +125,12 @@ pipeline {
       }
       parallel {
 
-        // 5
+        // 4
         stage('Android app') {
           stages {
+            stage("setup build dependencies") {
+              steps {sh ':'}
+            }
             stage("prepare project") {
               steps {sh ':'}
             }
@@ -166,12 +143,17 @@ pipeline {
           }
         }
 
-        // 6
+        // 5
         stage('iOS app') {
           agent {
             label "fastlane-ios"
           }
           stages {
+            stage("setup build dependencies") {
+              steps {
+                sh("bundle exec fastlane install_plugins");
+              }
+            }
             stage("setup keychain and profile") {
               steps {
                 // cleanup distribution environment
@@ -216,7 +198,6 @@ pipeline {
             stage("prepare xcode project") {
               steps {
                 unstash('base_ios_build');
-                unstash('node_modules_ios');
 
                 withCredentials([
                   file(credentialsId: 'ios_provisioning_profile', variable: 'PROVISIONING_PROFILE_FILE'),
@@ -279,7 +260,7 @@ pipeline {
       }
     }
 
-    // 7
+    // 6
     stage('cleanup') {
       steps {sh ':'}
     }
