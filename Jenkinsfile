@@ -142,23 +142,29 @@ pipeline {
               }
             }
             stage("prepare project") {
-              script {
-                docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
-                  sh 'fastlane prepare_android'
+              steps {
+                script {
+                  docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
+                    sh 'fastlane prepare_android'
+                  }
                 }
               }
             }
             stage("build") {
-              script {
-                docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
-                  sh 'fastlane build_android'
+              steps {
+                script {
+                  docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
+                    sh 'fastlane build_android'
+                  }
                 }
               }
             }
             stage("upload") {
-              script {
-                docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
-                  sh 'fastlane upload_android'
+              steps {
+                script {
+                  docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
+                    sh 'fastlane upload_android'
+                  }
                 }
               }
             }
