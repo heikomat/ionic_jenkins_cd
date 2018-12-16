@@ -183,10 +183,10 @@ pipeline {
                         sh("""
                           APP_VERSION=${PACKAGE_VERSION} \
                           BUILD_NUMBER=${BUILD_NUMBER} \
-                          KEYSTORE_FILE=${KEYSTORE_FILE} \
-                          KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD} \
+                          KEYSTORE_FILE="${KEYSTORE_FILE}" \
+                          KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD}" \
                           SIGNING_KEY_ALIAS=${SIGNING_KEY_ALIAS} \
-                          SIGNING_KEY_PASSWORD=${SIGNING_KEY_PASSWORD} \
+                          SIGNING_KEY_PASSWORD="${SIGNING_KEY_PASSWORD}" \
                           fastlane build_android --verbose
                         """)
                         
