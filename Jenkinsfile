@@ -159,8 +159,9 @@ pipeline {
                 script {
                   docker
                     .image('bigoloo/gitlab-ci-android-fastlane')
-                    .inside() { c ->
-                    sh 'fastlane prepare_android';
+                    // we run as root inside the docker container
+                    .inside('--user=0:0') { c ->
+                      sh 'fastlane prepare_android';
                   }
                 }
               }
@@ -170,8 +171,11 @@ pipeline {
                 script {
                   docker
                     .image('bigoloo/gitlab-ci-android-fastlane')
-                    .inside() { c ->
-                    sh 'fastlane build_android';
+                    // we run as root inside the docker container
+                    .inside('--user=0:0') { c ->
+                      sh 'fastlane build_android';
+                      // make the build be accessible for the user outside the docker container
+                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP}";
                   }
                 }
               }
@@ -181,8 +185,9 @@ pipeline {
                 script {
                   docker
                     .image('bigoloo/gitlab-ci-android-fastlane')
-                    .inside() { c ->
-                    sh 'fastlane upload_android';
+                    // we run as root inside the docker container
+                    .inside('--user=0:0') { c ->
+                      sh 'fastlane upload_android';
                   }
                 }
               }
