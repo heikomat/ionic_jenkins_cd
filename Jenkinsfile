@@ -133,6 +133,7 @@ pipeline {
           stages {
             stage("setup build dependencies") {
               steps {
+                unstash('base_android_build');
                 script {
                   // create gradlew file in the android project folder. This is needed by fastlane
                   docker.image('cangol/android-gradle').inside("--volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace") { c ->
