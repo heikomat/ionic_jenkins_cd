@@ -149,7 +149,6 @@ pipeline {
                       .image('amsitoperations/ams-android-gradle')
                       .inside() { c ->
                       sh 'gradle wrapper';
-                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./*"
                     }
                   }
                 }
