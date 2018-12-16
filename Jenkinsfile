@@ -179,7 +179,7 @@ pipeline {
                     docker
                       .image('bigoloo/gitlab-ci-android-fastlane')
                       // we run as root inside the docker container
-                      .inside("--volume=\"${KEYSTORE_FILE}\" --user=0:0') { c ->
+                      .inside("--volume=\"${KEYSTORE_FILE}\" --user=0:0") { c ->
                         sh("""
                           APP_VERSION=${PACKAGE_VERSION} \
                           BUILD_NUMBER=${BUILD_NUMBER} \
