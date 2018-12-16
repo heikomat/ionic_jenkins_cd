@@ -133,11 +133,11 @@ pipeline {
           stages {
             stage("setup build dependencies") {
               steps {
-                CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
-                CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
                 unstash('base_android_build');
                 script {
                   // create gradlew file in the android project folder. This is needed by fastlane
+                  CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
+                  CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
                   docker
                     .image('cangol/android-gradle')
                     .inside("""
