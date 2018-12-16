@@ -180,10 +180,11 @@ pipeline {
                       .image('bigoloo/gitlab-ci-android-fastlane')
                       // we run as root inside the docker container
                       .inside("--volume=\"${env.WORKSPACE}@tmp/secretFiles\" --user=0:0") { c ->
+                        sh "cp ${KEYSTORE_FILE} ${env.WORKSPACE}/android.keystore";
                         sh("""
                           APP_VERSION=${PACKAGE_VERSION} \
                           BUILD_NUMBER=${BUILD_NUMBER} \
-                          KEYSTORE_FILE="${KEYSTORE_FILE}" \
+                          KEYSTORE_FILE="${env.WORKSPACE}/android.keystore" \
                           KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD}" \
                           SIGNING_KEY_ALIAS=${SIGNING_KEY_ALIAS} \
                           SIGNING_KEY_PASSWORD="${SIGNING_KEY_PASSWORD}" \
