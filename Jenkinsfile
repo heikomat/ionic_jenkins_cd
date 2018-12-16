@@ -146,7 +146,7 @@ pipeline {
                     // but we mustn't set the group, otherwise this step fails with
                     // "The SDK directory (/android-sdk-linux) is not writeable"
                     docker
-                      .image('cangol/android-gradle')
+                      .image('amsitoperations/ams-android-gradle')
                       .inside() { c ->
                       sh 'gradle wrapper';
                       sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./*"
