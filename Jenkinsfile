@@ -185,10 +185,10 @@ pipeline {
                           APP_VERSION=${PACKAGE_VERSION} \
                           BUILD_NUMBER=${BUILD_NUMBER} \
                           KEYSTORE_FILE="${env.WORKSPACE}/android.keystore" \
-                          KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD}" \
+                          KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD} \
                           SIGNING_KEY_ALIAS=${SIGNING_KEY_ALIAS} \
-                          SIGNING_KEY_PASSWORD="${SIGNING_KEY_PASSWORD}" \
-                          fastlane build_android --verbose
+                          SIGNING_KEY_PASSWORD=${SIGNING_KEY_PASSWORD} \
+                          fastlane build_android
                         """)
                         
                         // make the build be accessible for the user outside the docker container
