@@ -134,19 +134,19 @@ pipeline {
             stage("setup build dependencies") {
               steps {
                 unstash('base_android_build');
-                script {
-                  // create gradlew file in the android project folder. This is needed by fastlane
-                  CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
-                  CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
-                  echo "${env.WORKSPACE}/platforms/android"
-                  docker
-                    .image('cangol/android-gradle')
-                    .inside("""
-                      --volume=${env.WORKSPACE}/platforms/android:/opt/workspace \
-                      --workdir=/opt/workspace \
-                      --user=${CURRENT_USER}:${CURRENT_GROUP}
-                    """) { c ->
-                    sh 'gradle wrapper';
+                // the docker plugin automatically mounts the current folder als workind directory,
+                // so we need to neither mount it ourselves, nor define the workdir ourselves.
+                // see for mor info: https://github.com/jenkinsci/docker-plugin/issues/561
+                dir("${env.WORKSPACE}/platforms/android") {
+                  script {
+                    // create gradlew file in the android project folder. This is needed by fastlane
+                    CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
+                    CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
+                    docker
+                      .image('cangol/android-gradle')
+                      .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
+                      sh 'gradle wrapper';
+                    }
                   }
                 }
               }
@@ -156,11 +156,7 @@ pipeline {
                 script {
                   docker
                     .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("""
-                      --volume=${env.WORKSPACE}:/opt/project \
-                      --workdir=/opt/project \
-                      --user=${CURRENT_USER}:${CURRENT_GROUP}
-                    """) { c ->
+                    .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
                     sh 'fastlane prepare_android';
                   }
                 }
@@ -171,11 +167,7 @@ pipeline {
                 script {
                   docker
                     .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("""
-                      --volume=${env.WORKSPACE}:/opt/project \
-                      --workdir=/opt/project \
-                      --user=${CURRENT_USER}:${CURRENT_GROUP}
-                    """) { c ->
+                    .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
                     sh 'fastlane build_android';
                   }
                 }
@@ -186,11 +178,7 @@ pipeline {
                 script {
                   docker
                     .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("""
-                      --volume=${env.WORKSPACE}:/opt/project \
-                      --workdir=/opt/project \
-                      --user=${CURRENT_USER}:${CURRENT_GROUP}
-                    """) { c ->
+                    .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
                     sh 'fastlane upload_android';
                   }
                 }
