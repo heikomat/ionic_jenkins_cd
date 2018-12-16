@@ -128,7 +128,7 @@ pipeline {
         // 4
         stage('Android app') {
           agent {
-            label "docker-linux"
+            label "docker"
           }
           stages {
             stage("setup build dependencies") {
@@ -179,7 +179,7 @@ pipeline {
                     docker
                       .image('bigoloo/gitlab-ci-android-fastlane')
                       // we run as root inside the docker container
-                      .inside("--volume=\"${KEYSTORE_FILE}\" --user=0:0") { c ->
+                      .inside("--volume=\"${env.WORKSPACE}@tmp/secretFiles\" --user=0:0") { c ->
                         sh("""
                           APP_VERSION=${PACKAGE_VERSION} \
                           BUILD_NUMBER=${BUILD_NUMBER} \
