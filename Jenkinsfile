@@ -149,7 +149,7 @@ pipeline {
                       .image('cangol/android-gradle')
                       .inside() { c ->
                       sh 'gradle wrapper';
-                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./*'
+                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./*"
                     }
                   }
                 }
