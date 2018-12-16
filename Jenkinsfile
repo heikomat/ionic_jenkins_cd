@@ -134,20 +134,33 @@ pipeline {
             stage("setup build dependencies") {
               steps {
                 script {
-                    docker.image('cangol/android-gradle').inside("--volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace") { c ->
-                      sh 'gradle wrapper'
-                    }
+                  // create gradlew file in the android project folder. This is needed by fastlane
+                  docker.image('cangol/android-gradle').inside("--volume=${env.WORKSPACE}/platforms/android/:/opt/workspace --workdir=/opt/workspace") { c ->
+                    sh 'gradle wrapper'
+                  }
                 }
               }
             }
             stage("prepare project") {
-              steps {sh ':'}
+              script {
+                docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
+                  sh 'fastlane prepare_android'
+                }
+              }
             }
             stage("build") {
-              steps {sh ':'}
+              script {
+                docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
+                  sh 'fastlane build_android'
+                }
+              }
             }
             stage("upload") {
-              steps {sh ':'}
+              script {
+                docker.image('unitedclassifiedsapps/gitlab-ci-android-fastlane').inside("--volume ${PWD}:/opt/project --workdir /opt/project") { c ->
+                  sh 'fastlane upload_android'
+                }
+              }
             }
           }
         }
