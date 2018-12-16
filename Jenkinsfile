@@ -187,7 +187,7 @@ pipeline {
                           KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD} \
                           SIGNING_KEY_ALIAS=${SIGNING_KEY_ALIAS} \
                           SIGNING_KEY_PASSWORD=${SIGNING_KEY_PASSWORD} \
-                          fastlane build_android --stacktrace
+                          fastlane build_android --verbose
                         """)
                         
                         // make the build be accessible for the user outside the docker container
