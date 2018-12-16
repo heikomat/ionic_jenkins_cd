@@ -158,8 +158,8 @@ pipeline {
               steps {
                 script {
                   docker
-                    .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("--user=${CURRENT_USER}") { c ->
+                    .image('bigoloo/gitlab-ci-android-fastlane')
+                    .inside() { c ->
                     sh 'fastlane prepare_android';
                   }
                 }
@@ -169,8 +169,8 @@ pipeline {
               steps {
                 script {
                   docker
-                    .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("--user=${CURRENT_USER}") { c ->
+                    .image('bigoloo/gitlab-ci-android-fastlane')
+                    .inside() { c ->
                     sh 'fastlane build_android';
                   }
                 }
@@ -180,8 +180,8 @@ pipeline {
               steps {
                 script {
                   docker
-                    .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("--user=${CURRENT_USER}") { c ->
+                    .image('bigoloo/gitlab-ci-android-fastlane')
+                    .inside() { c ->
                     sh 'fastlane upload_android';
                   }
                 }
