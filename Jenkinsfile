@@ -169,13 +169,30 @@ pipeline {
             stage("build") {
               steps {
                 script {
-                  docker
-                    .image('bigoloo/gitlab-ci-android-fastlane')
-                    // we run as root inside the docker container
-                    .inside('--user=0:0') { c ->
-                      sh 'fastlane build_android';
-                      // make the build be accessible for the user outside the docker container
-                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/*";
+                  
+                  withCredentials([
+                    file(credentialsId: 'android_keystore', variable: 'KEYSTORE_FILE'),
+                    string(credentialsId: 'android_keystore_password', variable: 'KEYSTORE_PASSWORD'),
+                    string(credentialsId: 'android_signing_key_alias', variable: 'SIGNING_KEY_ALIAS'),
+                    string(credentialsId: 'android_singing_key_password', variable: 'SIGNING_KEY_PASSWORD'),
+                  ]) {
+                    docker
+                      .image('bigoloo/gitlab-ci-android-fastlane')
+                      // we run as root inside the docker container
+                      .inside('--user=0:0') { c ->
+                        sh("""
+                          APP_VERSION=${PACKAGE_VERSION} \
+                          BUILD_NUMBER=${BUILD_NUMBER} \
+                          KEYSTORE_FILE=${KEYSTORE_FILE} \
+                          KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD} \
+                          SIGNING_KEY_ALIAS=${SIGNING_KEY_ALIAS} \
+                          SIGNING_KEY_PASSWORD=${SIGNING_KEY_PASSWORD} \
+                          fastlane build_android
+                        """)
+                        
+                        // make the build be accessible for the user outside the docker container
+                        sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/*";
+                    }
                   }
                 }
               }
