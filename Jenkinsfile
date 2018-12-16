@@ -145,7 +145,7 @@ pipeline {
                       --workdir=/opt/workspace \
                       --user=${CURRENT_USER}:${CURRENT_GROUP}
                     """) { c ->
-                    sh 'gradle wrapper':
+                    sh 'gradle wrapper';
                   }
                 }
               }
@@ -160,7 +160,7 @@ pipeline {
                       --workdir=/opt/project \
                       --user=${CURRENT_USER}:${CURRENT_GROUP}
                     """) { c ->
-                    sh 'fastlane prepare_android'
+                    sh 'fastlane prepare_android';
                   }
                 }
               }
@@ -175,7 +175,7 @@ pipeline {
                       --workdir=/opt/project \
                       --user=${CURRENT_USER}:${CURRENT_GROUP}
                     """) { c ->
-                    sh 'fastlane build_android'
+                    sh 'fastlane build_android';
                   }
                 }
               }
@@ -190,7 +190,7 @@ pipeline {
                       --workdir=/opt/project \
                       --user=${CURRENT_USER}:${CURRENT_GROUP}
                     """) { c ->
-                    sh 'fastlane upload_android'
+                    sh 'fastlane upload_android';
                   }
                 }
               }
