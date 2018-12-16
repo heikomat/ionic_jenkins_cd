@@ -175,7 +175,7 @@ pipeline {
                     .inside('--user=0:0') { c ->
                       sh 'fastlane build_android';
                       // make the build be accessible for the user outside the docker container
-                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP}";
+                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/*";
                   }
                 }
               }
