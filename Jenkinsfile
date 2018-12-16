@@ -138,10 +138,11 @@ pipeline {
                   // create gradlew file in the android project folder. This is needed by fastlane
                   CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
                   CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
+                  echo "${env.WORKSPACE}/platforms/android"
                   docker
                     .image('cangol/android-gradle')
                     .inside("""
-                      --volume=${env.WORKSPACE}/platforms/android/:/opt/workspace \
+                      --volume=${env.WORKSPACE}/platforms/android:/opt/workspace \
                       --workdir=/opt/workspace \
                       --user=${CURRENT_USER}:${CURRENT_GROUP}
                     """) { c ->
