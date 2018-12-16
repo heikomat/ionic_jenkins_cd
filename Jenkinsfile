@@ -128,7 +128,7 @@ pipeline {
         // 4
         stage('Android app') {
           agent {
-            label "master"
+            label "docker-linux"
           }
           stages {
             stage("setup build dependencies") {
