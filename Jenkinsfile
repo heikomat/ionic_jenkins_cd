@@ -176,11 +176,11 @@ pipeline {
                     string(credentialsId: 'android_signing_key_alias', variable: 'SIGNING_KEY_ALIAS'),
                     string(credentialsId: 'android_singing_key_password', variable: 'SIGNING_KEY_PASSWORD'),
                   ]) {
+                    sh "cp ${KEYSTORE_FILE} ${env.WORKSPACE}/android.keystore";
                     docker
                       .image('bigoloo/gitlab-ci-android-fastlane')
                       // we run as root inside the docker container
                       .inside("--volume=\"${env.WORKSPACE}@tmp/secretFiles\" --user=0:0") { c ->
-                        sh "cp ${KEYSTORE_FILE} ${env.WORKSPACE}/android.keystore";
                         sh("""
                           APP_VERSION=${PACKAGE_VERSION} \
                           BUILD_NUMBER=${BUILD_NUMBER} \
