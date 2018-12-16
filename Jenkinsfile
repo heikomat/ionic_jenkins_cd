@@ -147,7 +147,7 @@ pipeline {
                     // "The SDK directory (/android-sdk-linux) is not writeable"
                     docker
                       .image('cangol/android-gradle')
-                      .inside("--user=${CURRENT_USER}") { c ->
+                      .inside("--user=${CURRENT_USER}:1000") { c ->
                       sh 'gradle wrapper';
                       sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./*"
                     }
