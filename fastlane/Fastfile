@@ -29,14 +29,14 @@ lane :build_android do
   build_android_app(
     task: "assemble",
     build_type: "Release",
-    project_dir: "platforms/android/"
+    project_dir: "platforms/android/",
     properties: {
       "versionCode" => ENV["BUILD_NUMBER"],
       "versionName" => ENV["APP_VERSION"],
       "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
       "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
       "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"]",
-      "android.injected.signing.key.password" => ENV["SIGNING_KEY_PASSWORD"],
+      "android.injected.signing.key.password" => ENV["SIGNING_KEY_PASSWORD"]
     }
   )
 end
