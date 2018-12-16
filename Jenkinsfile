@@ -142,10 +142,14 @@ pipeline {
                     // create gradlew file in the android project folder. This is needed by fastlane
                     CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
                     CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
+                    // We must set the user, so we keep access rights to our folders,
+                    // but we mustn't set the group, otherwise this step fails with
+                    // "The SDK directory (/android-sdk-linux) is not writeable"
                     docker
                       .image('cangol/android-gradle')
-                      .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
+                      .inside() { c ->
                       sh 'gradle wrapper';
+                      sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./*'
                     }
                   }
                 }
@@ -156,7 +160,7 @@ pipeline {
                 script {
                   docker
                     .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
+                    .inside("--user=${CURRENT_USER}") { c ->
                     sh 'fastlane prepare_android';
                   }
                 }
@@ -167,7 +171,7 @@ pipeline {
                 script {
                   docker
                     .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
+                    .inside("--user=${CURRENT_USER}") { c ->
                     sh 'fastlane build_android';
                   }
                 }
@@ -178,7 +182,7 @@ pipeline {
                 script {
                   docker
                     .image('unitedclassifiedsapps/gitlab-ci-android-fastlane')
-                    .inside("--user=${CURRENT_USER}:${CURRENT_GROUP}") { c ->
+                    .inside("--user=${CURRENT_USER}") { c ->
                     sh 'fastlane upload_android';
                   }
                 }
