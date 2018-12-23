@@ -22,7 +22,7 @@ lane :upload_android do
   upload_to_play_store(
     json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"],
     # If you'd like to build multiple apps with identical settings, you could set this to an environment variable
-    package_name: "de.fiveminds.deploydemo"
+    package_name: "de.fiveminds.deploydemo",
     apk: "platforms/android//app/build/outputs/apk/release/app-release.apk",
     track: "alpha"
   )
