@@ -175,6 +175,7 @@ pipeline {
                     string(credentialsId: 'android_keystore_password', variable: 'KEYSTORE_PASSWORD'),
                     string(credentialsId: 'android_signing_key_alias', variable: 'SIGNING_KEY_ALIAS'),
                     string(credentialsId: 'android_singing_key_password', variable: 'SIGNING_KEY_PASSWORD'),
+                    file(credentialsId: 'google_play_service_account', variable: 'GOOGLE_PLAY_SERVICE_ACCOUNT'),
                   ]) {
                     sh "cp ${KEYSTORE_FILE} ${env.WORKSPACE}/android.keystore";
                     docker
@@ -188,11 +189,13 @@ pipeline {
                           KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD} \
                           SIGNING_KEY_ALIAS=${SIGNING_KEY_ALIAS} \
                           SIGNING_KEY_PASSWORD=${SIGNING_KEY_PASSWORD} \
+                          GOOGLE_PLAY_SERVICE_ACCOUNT=${GOOGLE_PLAY_SERVICE_ACCOUNT} \
                           fastlane build_android
                         """)
                         
                         // make the build be accessible for the user outside the docker container
                         sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/*";
+                        sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/.*";
                     }
                   }
                 }

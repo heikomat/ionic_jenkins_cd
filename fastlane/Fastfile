@@ -43,6 +43,8 @@ end
 
 lane :upload_android do
   upload_to_play_store(
-    username: ENV["APPSTORECONNECT_USER"]
+    json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"],
+    apk: "platforms/android//app/build/outputs/apk/release/app-release.apk",
+    track: "alpha"
   )
 end
