@@ -1,27 +1,4 @@
 lane :prepare_android do
-  # If you'd like to build multiple apps with identical settings, you could add this
-  # to set name and identifier based on environment variables:
-  #update_info_plist(
-  #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
-  #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
-  #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
-  #  display_name: ENV["IOS_APP_NAME"]
-  #)
-
-  # the combination version + build must be unique, so set them here
-  #increment_version_number(
-  #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
-  #  version_number: ENV["APP_VERSION"]
-  #)
-
-  # set the build number using set_info_plist_value, because
-  # increment_build_number isn't working (it always says "Apple Generic
-  # Versioning is not enabled in this project"), see https://github.com/fastlane/fastlane/issues/9506
-  #set_info_plist_value(
-  #  path: "platforms/ios/Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
-  #  key: "CFBundleVersion",
-  #  value: ENV["BUILD_NUMBER"]
-  #)
 end
 
 lane :build_android do
@@ -44,6 +21,8 @@ end
 lane :upload_android do
   upload_to_play_store(
     json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"],
+    # If you'd like to build multiple apps with identical settings, you could set this to an environment variable
+    package_name: "de.fiveminds.deploydemo"
     apk: "platforms/android//app/build/outputs/apk/release/app-release.apk",
     track: "alpha"
   )
