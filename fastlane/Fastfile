@@ -1,3 +1,95 @@
+lane :prepare_ios do
+  # xcodeprojects created by ionic use some old format, so we need to update it.
+  # You probably don't need this, if you don't use ionic
+  upgrade_super_old_xcode_project(
+    path: "platforms/ios/Deploydemo 5Minds.xcodeproj",
+    team_id: ENV["APPLE_TEAM_ID"]
+  )
+
+  # To maintain maximum reproducability, we handle code signing ourselves.
+  # This is harder to set up, but this way we don't rely on some magic services
+  # that we don't really understand and that could change without our knowledge
+  disable_automatic_code_signing(
+    path: "platforms/ios/Deploydemo 5Minds.xcodeproj",
+    code_sign_identity: "iPhone Distribution",
+    team_id: ENV["APPLE_TEAM_ID"]
+  )
+
+  # Tell xcode to use our specific provisioning profile (obtained from jenkins)
+  update_project_provisioning({
+    xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
+    profile: ENV["PROVISIONING_PROFILE_FILE"],
+    build_configuration: "Release"
+  })
+
+  # If you'd like to build multiple apps with identical settings, you could add this
+  # to set name and identifier based on environment variables:
+  #update_info_plist(
+  #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
+  #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
+  #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
+  #  display_name: ENV["IOS_APP_NAME"]
+  #)
+
+  # the combination version + build must be unique, so set them here
+  increment_version_number(
+    xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
+    version_number: ENV["APP_VERSION"]
+  )
+
+  # set the build number using set_info_plist_value, because
+  # increment_build_number isn't working (it always says "Apple Generic
+  # Versioning is not enabled in this project"), see https://github.com/fastlane/fastlane/issues/9506
+  set_info_plist_value(
+    path: "platforms/ios/Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
+    key: "CFBundleVersion",
+    value: ENV["BUILD_NUMBER"]
+  )
+
+  # Tell apple that we do use don't use any **non-exepmt** encryption. If you DO
+  # use non-exempt ecryption, set this to yes and enable the following block.
+  # Setting this value allows us to skip the manual export compliance step in
+  # App Store Connect, which in turn allows us to directly push the build to testers.
+  set_info_plist_value(
+    path: "platforms/ios/Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
+    key: "ITSAppUsesNonExemptEncryption",
+    value: false
+  )
+ 
+  # If you DO use non-exempt encryption enable this block and enter you compliance
+  # code, which you can find in App Store Connect.
+  #
+  #set_info_plist_value(
+  #  path: "platforms/ios/Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
+  #  key: "ITSEncryptionExportComplianceCode",
+  #  value: "YOUR_COMPLIANCE_CODE_HERE"
+  #)
+end
+
+lane :build_ios do
+  # Tell xcode to use the provisioning provile we provide to build the app
+  build_app(
+    workspace: "platforms/ios/Deploydemo 5Minds.xcworkspace",
+    configuration: "Release",
+    clean: true,
+    export_options: {
+      export_method: "app-store",
+      provisioningProfiles: {
+        "de.fiveminds.deploydemo" => ENV["PROVISIONING_PROFILE_ID"]
+        # use the following if you build mutliple apps with this fastfile:
+        #ENV["IOS_APP_IDENTIFIER"] => ENV["PROVISIONING_PROFILE_ID"]
+      },
+      skip_profile_detection: true
+    }
+  )
+end
+
+lane :upload_ios do
+  upload_to_testflight(
+    username: ENV["APPSTORECONNECT_USER"]
+  )
+end
+
 lane :prepare_android do
 end
 
