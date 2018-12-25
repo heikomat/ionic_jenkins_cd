@@ -218,10 +218,10 @@ pipeline {
                 }
               }
             }
-            post {
-              always {
-                cleanup_workspace();
-              }
+          }
+          post {
+            always {
+              cleanup_workspace();
             }
           }
         }
