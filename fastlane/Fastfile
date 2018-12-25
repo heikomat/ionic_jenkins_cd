@@ -94,11 +94,13 @@ lane :prepare_android do
   # the combination version + build must be unique, so set them here
   android_set_version_name(
     version_name: ENV["APP_VERSION"],
-    gradle_file: "platforms/android/build.gradle"
+    # use your build.gradle here for non-cordova projects
+    gradle_file: "platforms/android/build-extras.gradle"
   )
 
   android_set_version_code(
     version_code: ENV["BUILD_NUMBER"],
+    # use your build.gradle here for non-cordova projects
     gradle_file: "platforms/android/build.gradle"
   )
 end

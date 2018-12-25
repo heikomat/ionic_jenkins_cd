@@ -1,4 +1,4 @@
 ext.postBuildExtras = {
     android.defaultConfig.versionCode = 1
-    android.defaultConfig.versionNumber = "0.0.1"
+    android.defaultConfig.versionName = "0.0.4"
 }
