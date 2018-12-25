@@ -218,6 +218,11 @@ pipeline {
                 }
               }
             }
+            post {
+              always {
+                cleanup_workspace();
+              }
+            }
           }
         }
 
