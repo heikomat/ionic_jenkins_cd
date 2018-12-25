@@ -101,7 +101,7 @@ lane :prepare_android do
   android_set_version_code(
     version_code: ENV["BUILD_NUMBER"],
     # use your build.gradle here for non-cordova projects
-    gradle_file: "platforms/android/build.gradle"
+    gradle_file: "platforms/android/build-extras.gradle"
   )
 end
 
