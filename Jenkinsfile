@@ -229,7 +229,7 @@ pipeline {
           stages {
             stage("setup build dependencies") {
               steps {
-                sh("fastlane install_plugins");
+                sh("bundle install");
               }
             }
             stage("setup keychain and profile") {
