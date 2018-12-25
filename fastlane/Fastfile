@@ -92,7 +92,7 @@ end
 
 lane :prepare_android do
   # the combination version + build must be unique, so set them here
-  androi_set_version_name(
+  android_set_version_name(
     version_name: ENV["APP_VERSION"],
     gradle_file: "platforms/android/build.gradle"
   )
