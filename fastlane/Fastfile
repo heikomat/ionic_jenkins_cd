@@ -106,7 +106,6 @@ lane :prepare_android do
 end
 
 lane :build_android do
-  # Tell xcode to use the provisioning provile we provide to build the app
   build_android_app(
     task: "assemble",
     build_type: "Release",
