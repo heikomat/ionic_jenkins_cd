@@ -168,6 +168,7 @@ pipeline {
             stage("build") {
               steps {
                 script {
+                  // We need these later to correct file ownership
                   CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
                   CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
                   
@@ -177,11 +178,16 @@ pipeline {
                     string(credentialsId: 'android_signing_key_alias', variable: 'SIGNING_KEY_ALIAS'),
                     string(credentialsId: 'android_singing_key_password', variable: 'SIGNING_KEY_PASSWORD'),
                   ]) {
+                    /**
+                    * The ${KEYSTORE_FILE}-path points to a file in ${env.WORKSPACE}@tmp/secretFiles.
+                    * fastlane or gradle don't seem to handle the "@" in that path correctly,
+                    * so we copy it over to our regular workspace folder, that doesn't contain an "@"
+                    */
                     sh "cp ${KEYSTORE_FILE} ${env.WORKSPACE}/android.keystore";
                     docker
                       .image('bigoloo/gitlab-ci-android-fastlane')
-                      // we run as root inside the docker container
-                      .inside("--volume=\"${env.WORKSPACE}@tmp/secretFiles\" --user=0:0") { c ->
+                      // we run as root inside the docker container, otherwise the installed won'tbe accessible
+                      .inside('--user=0:0') { c ->
                         sh("""
                           KEYSTORE_FILE="${env.WORKSPACE}/android.keystore" \
                           KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD} \
@@ -191,7 +197,7 @@ pipeline {
                         """)
                         
                         // make the build be accessible for the user outside the docker container.
-                        // without this, building and workspace-cleanup won't work
+                        // without this, uploading and workspace-cleanup won't work
                         sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/*";
                         sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/.*";
                     }
@@ -202,15 +208,17 @@ pipeline {
             stage("upload") {
               steps {
                 script {
-
                   withCredentials([
                     file(credentialsId: 'google_play_service_account', variable: 'GOOGLE_PLAY_SERVICE_ACCOUNT'),
                   ]) {
                     docker
                       .image('bigoloo/gitlab-ci-android-fastlane')
-                      // we run as root inside the docker container
+                      // we run as root inside the docker container, otherwise the installed won'tbe accessible
                       .inside('--user=0:0') { c ->
-                        sh "GOOGLE_PLAY_SERVICE_ACCOUNT=${GOOGLE_PLAY_SERVICE_ACCOUNT} fastlane upload_android";
+                        sh ("""
+                          GOOGLE_PLAY_SERVICE_ACCOUNT=${GOOGLE_PLAY_SERVICE_ACCOUNT} \
+                          fastlane upload_android
+                        """);
                     }
                   }
                 }
