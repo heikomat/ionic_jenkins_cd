@@ -134,7 +134,7 @@ pipeline {
             stage("setup build dependencies") {
               steps {
                 unstash('base_android_build');
-                // the docker plugin automatically mounts the current folder als workind directory,
+                // the docker plugin automatically mounts the current folder als working directory,
                 // so we need to neither mount it ourselves, nor define the workdir ourselves.
                 // see for mor info: https://github.com/jenkinsci/docker-plugin/issues/561
                 dir("${env.WORKSPACE}/platforms/android") {
@@ -154,7 +154,7 @@ pipeline {
                 script {
                   docker
                     .image('bigoloo/gitlab-ci-android-fastlane')
-                    // we run as root inside the docker container
+                    // we run as root inside the docker container, otherwise the installed tools won't be accessible
                     .inside('--user=0:0') { c ->
                       sh ("""
                         APP_VERSION=${PACKAGE_VERSION} \
@@ -186,7 +186,7 @@ pipeline {
                     sh "cp ${KEYSTORE_FILE} ${env.WORKSPACE}/android.keystore";
                     docker
                       .image('bigoloo/gitlab-ci-android-fastlane')
-                      // we run as root inside the docker container, otherwise the installed won'tbe accessible
+                      // we run as root inside the docker container, otherwise the installed tools won't be accessible
                       .inside('--user=0:0') { c ->
                         sh("""
                           KEYSTORE_FILE="${env.WORKSPACE}/android.keystore" \
@@ -213,7 +213,7 @@ pipeline {
                   ]) {
                     docker
                       .image('bigoloo/gitlab-ci-android-fastlane')
-                      // we run as root inside the docker container, otherwise the installed won'tbe accessible
+                      // we run as root inside the docker container, otherwise the installed tools won't be accessible
                       .inside('--user=0:0') { c ->
                         sh ("""
                           GOOGLE_PLAY_SERVICE_ACCOUNT=${GOOGLE_PLAY_SERVICE_ACCOUNT} \

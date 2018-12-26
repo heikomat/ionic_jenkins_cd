@@ -11,8 +11,8 @@ const fs = require('fs')
 const path = require('path');
 
 module.exports = function(context) {
-  var Q = context.requireCordovaModule('q');
-  var deferral = new Q.defer();
+  const Q = context.requireCordovaModule('q');
+  const deferral = new Q.defer();
 
   const rootFolder = context.opts.projectRoot;
   const source = path.join(rootFolder, 'build-extras.gradle')
