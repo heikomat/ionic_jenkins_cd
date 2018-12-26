@@ -140,11 +140,6 @@ pipeline {
                 dir("${env.WORKSPACE}/platforms/android") {
                   script {
                     // create gradlew file in the android project folder. This is needed by fastlane
-                    CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
-                    CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
-                    // We must set the user, so we keep access rights to our folders,
-                    // but we mustn't set the group, otherwise this step fails with
-                    // "The SDK directory (/android-sdk-linux) is not writeable"
                     docker
                       .image('amsitoperations/ams-android-gradle')
                       .inside() { c ->
@@ -173,6 +168,8 @@ pipeline {
             stage("build") {
               steps {
                 script {
+                  CURRENT_USER = sh (script: "id -u", returnStdout: true).trim();
+                  CURRENT_GROUP = sh (script: "id -g", returnStdout: true).trim();
                   
                   withCredentials([
                     file(credentialsId: 'android_keystore', variable: 'KEYSTORE_FILE'),
@@ -193,7 +190,8 @@ pipeline {
                           fastlane build_android
                         """)
                         
-                        // make the build be accessible for the user outside the docker container
+                        // make the build be accessible for the user outside the docker container.
+                        // without this, building and workspace-cleanup won't work
                         sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/*";
                         sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/.*";
                     }
