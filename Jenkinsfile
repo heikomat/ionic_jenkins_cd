@@ -18,7 +18,6 @@ pipeline {
     nodejs 'node-lts'
   }
   environment {
-    NODE_JS_VERSION = 'node-lts' // so we use the same node version throughout the pipeline
     APPSTORECONNECT_TEAMID = '1310680'// only required if build for iOS
   }
 
@@ -40,10 +39,7 @@ pipeline {
           BUILD_APP = BRANCH_IS_MASTER;
 
           // prepare dependencies to use when setting up the android/ios projects
-          nodejs(nodeJSInstallationName: env.NODE_JS_VERSION) {
-            sh('npm install');
-          }
-
+          sh('npm install');
           stash(includes: 'node_modules/', name: 'node_modules');
         }
       }
