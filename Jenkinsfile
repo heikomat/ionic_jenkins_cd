@@ -192,7 +192,7 @@ pipeline {
                           fastlane build_android
                         """)
                         
-                        // make the build be accessible for the user outside the docker container.
+                        // make the build is accessible for the user outside the docker container.
                         // without this, uploading and workspace-cleanup won't work
                         sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/*";
                         sh "chown -R ${CURRENT_USER}:${CURRENT_GROUP} ./platforms/android/.*";
