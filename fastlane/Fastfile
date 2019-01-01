@@ -22,15 +22,6 @@ lane :prepare_ios do
     build_configuration: "Release"
   })
 
-  # If you'd like to build multiple apps with identical settings, you could add this
-  # to set name and identifier based on environment variables:
-  #update_info_plist(
-  #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
-  #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
-  #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
-  #  display_name: ENV["IOS_APP_NAME"]
-  #)
-
   # the combination version + build must be unique, so set them here
   increment_version_number(
     xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
@@ -45,6 +36,15 @@ lane :prepare_ios do
     key: "CFBundleVersion",
     value: ENV["BUILD_NUMBER"]
   )
+
+  # If you'd like to build multiple apps with identical settings, you could add this
+  # to set name and identifier based on environment variables:
+  #update_info_plist(
+  #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
+  #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
+  #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
+  #  display_name: ENV["IOS_APP_NAME"]
+  #)
 
   # Tell apple that we do use don't use any **non-exepmt** encryption. If you DO
   # use non-exempt ecryption, set this to yes and enable the following block.
@@ -68,7 +68,7 @@ end
 
 lane :build_ios do
   # Tell xcode to use the provisioning provile we provide to build the app
-  build_app(
+  build_ios_app(
     workspace: "platforms/ios/Deploydemo 5Minds.xcworkspace",
     configuration: "Release",
     clean: true,
@@ -103,6 +103,33 @@ lane :prepare_android do
     # use your build.gradle here for non-cordova projects
     gradle_file: "platforms/android/build-extras.gradle"
   )
+
+  # If you'd like to build multiple apps with identical settings, you could add this
+  # to set name and identifier based on environment variables:
+  # (Remember adjust the project_path, the (old) package_name and set the ANDROID_APP_IDENTIFIER environment variable)
+  #sh(
+  #  'project_path="../platforms/android"; '\
+  #  'package_name="com.factro.mobileappsmb"; '\
+  #  'new_package_name="' + ENV["ANDROID_APP_IDENTIFIER"] + '"; '\
+  #  ''\
+  #  'folder=$(echo "${package_name}" | sed "s/\./\//g"); '\
+  #  'new_folder=$(echo "${new_package_name}" | sed "s/\./\//g"); '\
+  #  'new_folder_path="${project_path}/app/src/main/java/${new_folder}"; '\
+  #  ''\
+  #  'mkdir --parents ${new_folder_path}; '\
+  #  'mv ${project_path}/app/src/main/java/${folder}/*.java "${new_folder_path}/"; '\
+  #  'find ${project_path}/app/src -name \'*.java\' -type f -exec sed -i "s/${package_name}/${new_package_name}/" {} \\;; '\
+  #  'find ${project_path}/app/src -name \'AndroidManifest.xml\' -type f -exec sed -i "s/${package_name}/${new_package_name}/" {} \\;; '\
+  #  'find ${project_path}/app -name \'build.gradle\' -type f -exec sed -i "s/${package_name}/${new_package_name}/" {} \\; '
+  #)
+  #
+  # this runs from the fastlane-folder, so go to root first.
+  # (Remember to correct this path to point to your strings.xml and set the ANDROID_APP_NAME environment variable )
+  #sh(
+  #  'sed -i '\
+  #  '\'s/"app_name"\([^>]*>\)[^<]*/"app_name"\1' + ENV["ANDROID_APP_NAME"] + '/g\' '\
+  #  '../platforms/android/app/src/main/res/values/strings.xml'
+  #)
 end
 
 lane :build_android do
@@ -122,8 +149,9 @@ end
 lane :upload_android do
   upload_to_play_store(
     json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"],
-    # If you'd like to build multiple apps with identical settings, you could set this to an environment variable
     package_name: "de.fiveminds.deploydemo",
+    # use the following if you build mutliple apps with this fastfile:
+    #package_name: ENV["ANDROID_APP_IDENTIFIER"]
     apk: "platforms/android/app/build/outputs/apk/release/app-release.apk",
     track: "alpha"
   )
