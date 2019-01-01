@@ -107,6 +107,7 @@ lane :prepare_android do
   # If you'd like to build multiple apps with identical settings, you could add this
   # to set name and identifier based on environment variables:
   # (Remember adjust the project_path, the (old) package_name and set the ANDROID_APP_IDENTIFIER environment variable)
+  # this runs from the fastlane-folder, so go to root first.
   #sh(
   #  'project_path="../platforms/android"; '\
   #  'package_name="com.factro.mobileappsmb"; '\
