@@ -137,7 +137,7 @@ pipeline {
                   script {
                     // create gradlew file in the android project folder. This is needed by fastlane
                     docker
-                      .image('amsitoperations/ams-android-gradle')
+                      .image('thyrlian/android-sdk')
                       /**
                       * we run as root inside the docker container, otherwise this step
                       * will fail if additional android sdk components need to be
@@ -145,7 +145,7 @@ pipeline {
                       * incorrect ownership, but that will be corrected in the build step
                       */
                       .inside('--user=0:0') { c ->
-                      sh 'gradle wrapper';
+                      sh "sdkmanager 'build-tools;28.0.3' && cd '${env.WORKSPACE}/platforms/android' && gradle wrapper";
                     }
                   }
                 }
@@ -190,7 +190,7 @@ pipeline {
                       .image('bigoloo/gitlab-ci-android-fastlane')
                       // we run as root inside the docker container, otherwise the installed tools won't be accessible
                       .inside('--user=0:0') { c ->
-                        sh("""
+                        sh("""yes | sdkmanager --licenses &&
                           KEYSTORE_FILE="${env.WORKSPACE}/android.keystore" \
                           KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD} \
                           SIGNING_KEY_ALIAS=${SIGNING_KEY_ALIAS} \
