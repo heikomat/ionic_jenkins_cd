@@ -36,7 +36,7 @@ pipeline {
 
           // Define when to build the app
           BRANCH_IS_MASTER = env.BRANCH_NAME == 'master';
-          BUILD_APP = BRANCH_IS_MASTER || true;
+          BUILD_APP = BRANCH_IS_MASTER;
 
           // prepare dependencies to use when setting up the android/ios projects
           sh('npm install');
