@@ -7,24 +7,12 @@
  * and on what we do in this hook:
  * https://cordova.apache.org/docs/en/latest/guide/platforms/android/#setting-gradle-properties
  */
-const fs = require('fs')
+const {promises: fsPromises} = require('fs');
 const path = require('path');
 
-module.exports = function(context) {
-  const Q = context.requireCordovaModule('q');
-  const deferral = new Q.defer();
-
+module.exports = function (context) {
   const rootFolder = context.opts.projectRoot;
   const source = path.join(rootFolder, 'build-extras.gradle')
   const target = path.join(rootFolder, 'platforms', 'android', 'build-extras.gradle')
-  fs.copyFile(source, target, (error) => {
-    if (error !== undefined && error !== null) {
-      console.log(error);
-      return deferral.reject(error);
-    }
-
-    deferral.resolve();
-  });
-
-  return deferral.promise;
+  return fsPromises.copyFile(source, target);
 }
