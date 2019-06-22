@@ -42,8 +42,13 @@ lane :prepare_ios do
   #update_info_plist(
   #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
   #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
-  #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
   #  display_name: ENV["IOS_APP_NAME"]
+  #)
+  #
+  #update_app_identifier(
+  #  xcodeproj: "platforms/ios/Deploydemo 5Minds.xcodeproj",
+  #  plist_path: "Deploydemo 5Minds/Deploydemo 5Minds-Info.plist",
+  #  app_identifier: ENV["IOS_APP_IDENTIFIER"],
   #)
 
   # Tell apple that we do use don't use any **non-exepmt** encryption. If you DO
